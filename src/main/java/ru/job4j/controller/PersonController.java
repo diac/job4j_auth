@@ -12,7 +12,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/person")
 @AllArgsConstructor
-
 public class PersonController {
 
     private final PersonService personService;

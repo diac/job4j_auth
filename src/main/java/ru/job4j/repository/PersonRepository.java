@@ -6,4 +6,6 @@ import ru.job4j.domain.Person;
 
 @Repository
 public interface PersonRepository extends CrudRepository<Person, Integer> {
+
+    Person findByLogin(String login);
 }
