@@ -131,9 +131,9 @@
 		<profile>
 			<id>production</id>
 			<properties>
-				<db.url>jdbc:postgresql://127.0.0.1:5432/fullstack_au</db.url>
+				<db.url>jdbc:postgresql://127.0.0.1:5432/fullstack_auth</db.url>
 				<db.username>postgres</db.username>
-				<db.password>postgres</db.password>
+				<db.password>password</db.password>
 				<db.driver>org.postgresql.Driver</db.driver>
 			</properties>
 		</profile>
