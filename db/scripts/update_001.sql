@@ -1,7 +1,7 @@
-create table person (
-    id serial primary key not null,
-    login varchar(2000),
-    password varchar(2000)
+CREATE TABLE person (
+    id SERIAL PRIMARY KEY NOT NULL,
+    login varchar UNIQUE NOT NULL,
+    password varchar NOT NULL
 );
 
 insert into person (login, password) values ('parsentev', '123');

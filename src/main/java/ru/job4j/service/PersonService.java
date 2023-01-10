@@ -14,4 +14,8 @@ public interface PersonService {
     Person save(Person person);
 
     void delete(Person person);
+
+    boolean existsById(int id);
+
+    void deleteById(int id);
 }

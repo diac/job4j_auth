@@ -36,4 +36,14 @@ public class SimplePersonService implements PersonService {
     public void delete(Person person) {
         personRepository.delete(person);
     }
+
+    @Override
+    public boolean existsById(int id) {
+        return personRepository.existsById(id);
+    }
+
+    @Override
+    public void deleteById(int id) {
+        personRepository.deleteById(id);
+    }
 }
