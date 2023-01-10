@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import ru.job4j.domain.Person;
+import ru.job4j.dto.PersonDto;
 import ru.job4j.exception.InvalidPasswordFormatException;
 import ru.job4j.handler.GlobalExceptionHandler;
 import ru.job4j.service.PersonService;
@@ -84,6 +85,42 @@ public class PersonController {
             return ResponseEntity.ok().build();
         } catch (EmptyResultDataAccessException e) {
             return ResponseEntity.notFound().build();
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PatchMapping("/{id}/change_login")
+    public ResponseEntity<Void> changeLogin(@PathVariable int id, @RequestBody PersonDto personDto) {
+        Person person = personService.findById(id)
+                .orElseThrow(
+                        () -> new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                String.format("Person not found for the following ID:  %d", id)
+                        )
+                );
+        person.setLogin(personDto.getLogin());
+        try {
+            personService.save(person);
+            return ResponseEntity.ok().build();
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PatchMapping("/{id}/change_password")
+    public ResponseEntity<Void> changePassword(@PathVariable int id, @RequestBody PersonDto personDto) {
+        Person person = personService.findById(id)
+                .orElseThrow(
+                        () -> new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                String.format("Person not found for the following ID:  %d", id)
+                        )
+                );
+        person.setPassword(personDto.getPassword());
+        try {
+            personService.save(person);
+            return ResponseEntity.ok().build();
         } catch (DataIntegrityViolationException e) {
             return ResponseEntity.badRequest().build();
         }
