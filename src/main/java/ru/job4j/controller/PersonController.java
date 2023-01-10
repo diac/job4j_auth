@@ -34,8 +34,11 @@ public class PersonController {
     private final ObjectMapper objectMapper;
 
     @GetMapping("/")
-    public List<Person> findAll() {
-        return personService.findAll();
+    public ResponseEntity<List<Person>> findAll() {
+        List<Person> people = personService.findAll();
+        return ResponseEntity.status(HttpStatus.OK)
+                .header("Job4jCustomHeader", "job4j")
+                .body(people);
     }
 
     @GetMapping("/{id}")
