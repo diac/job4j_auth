@@ -1,9 +1,12 @@
 package ru.job4j.service;
 
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.job4j.domain.Person;
+import ru.job4j.exception.InvalidPasswordFormatException;
 import ru.job4j.repository.PersonRepository;
+import ru.job4j.util.Passwords;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +17,8 @@ import java.util.Optional;
 public class SimplePersonService implements PersonService {
 
     private final PersonRepository personRepository;
+
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Override
     public List<Person> findAll() {
@@ -29,6 +34,10 @@ public class SimplePersonService implements PersonService {
 
     @Override
     public Person save(Person person) {
+        if (!Passwords.isValidPasswordFormat(person.getPassword().toCharArray())) {
+            throw new InvalidPasswordFormatException("Invalid password format");
+        }
+        person.setPassword(passwordEncoder.encode(person.getPassword()));
         return personRepository.save(person);
     }
 
