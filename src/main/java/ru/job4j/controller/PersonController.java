@@ -51,34 +51,27 @@ public class PersonController {
 
     @PostMapping("/")
     public ResponseEntity<Person> create(@RequestBody Person person) {
+        boolean success = personService.save(person);
         return new ResponseEntity<>(
-                personService.save(person),
-                HttpStatus.CREATED
+                person,
+                success ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST
         );
     }
 
     @PutMapping("/")
     public ResponseEntity<Void> update(@RequestBody Person person) {
-        if (!personService.existsById(person.getId())) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
-                    String.format("Person not found for the following ID:  %d", person.getId())
-            );
-        }
-        personService.save(person);
-        return ResponseEntity.ok().build();
+        boolean success = personService.save(person);
+        return new ResponseEntity<>(
+                success ? HttpStatus.OK : HttpStatus.NOT_FOUND
+        );
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable int id) {
-        if (!personService.existsById(id)) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
-                    String.format("Person not found for the following ID:  %d", id)
-            );
-        }
-        personService.deleteById(id);
-        return ResponseEntity.ok().build();
+        boolean success = personService.deleteById(id);
+        return new ResponseEntity<>(
+                success ? HttpStatus.OK : HttpStatus.NOT_FOUND
+        );
     }
 
     @PatchMapping("/{id}/change_login")

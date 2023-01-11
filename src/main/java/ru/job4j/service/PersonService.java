@@ -11,11 +11,11 @@ public interface PersonService {
 
     Optional<Person> findById(int id);
 
-    Person save(Person person);
+    boolean save(Person person);
 
-    void delete(Person person);
+    boolean delete(Person person);
 
     boolean existsById(int id);
 
-    void deleteById(int id);
+    boolean deleteById(int id);
 }

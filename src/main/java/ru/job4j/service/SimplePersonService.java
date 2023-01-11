@@ -1,6 +1,7 @@
 package ru.job4j.service;
 
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.job4j.domain.Person;
@@ -33,17 +34,27 @@ public class SimplePersonService implements PersonService {
     }
 
     @Override
-    public Person save(Person person) {
+    public boolean save(Person person) {
         if (!Passwords.isValidPasswordFormat(person.getPassword().toCharArray())) {
             throw new InvalidPasswordFormatException("Invalid password format");
         }
         person.setPassword(passwordEncoder.encode(person.getPassword()));
-        return personRepository.save(person);
+        try {
+            personRepository.save(person);
+            return true;
+        } catch (DataIntegrityViolationException e) {
+            return false;
+        }
     }
 
     @Override
-    public void delete(Person person) {
-        personRepository.delete(person);
+    public boolean delete(Person person) {
+        boolean success = false;
+        if (personRepository.existsById(person.getId())) {
+            personRepository.delete(person);
+            success = true;
+        }
+        return success;
     }
 
     @Override
@@ -52,7 +63,12 @@ public class SimplePersonService implements PersonService {
     }
 
     @Override
-    public void deleteById(int id) {
-        personRepository.deleteById(id);
+    public boolean deleteById(int id) {
+        boolean success = false;
+        if (personRepository.existsById(id)) {
+            personRepository.deleteById(id);
+            success = true;
+        }
+        return success;
     }
 }
