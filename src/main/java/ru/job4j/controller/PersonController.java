@@ -6,13 +6,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import ru.job4j.domain.Person;
 import ru.job4j.dto.PersonDto;
 import ru.job4j.handler.GlobalExceptionHandler;
 import ru.job4j.service.PersonService;
+import ru.job4j.validation.Operation;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -50,7 +53,8 @@ public class PersonController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Person> create(@RequestBody Person person) {
+    @Validated(Operation.OnCreate.class)
+    public ResponseEntity<Person> create(@RequestBody @Valid Person person) {
         return new ResponseEntity<>(
                 personService.save(person),
                 HttpStatus.CREATED
@@ -58,7 +62,7 @@ public class PersonController {
     }
 
     @PutMapping("/")
-    public ResponseEntity<Void> update(@RequestBody Person person) {
+    public ResponseEntity<Void> update(@RequestBody @Valid Person person) {
         if (!personService.existsById(person.getId())) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
